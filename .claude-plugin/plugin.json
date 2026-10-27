@@ -1,1 +1,1 @@
-{ "name": "usage-band", "version": "0.2.0", "description": "Shows the 5-hour window, the weekly window and the context window above the prompt, always.", "types": "./types/index.d.ts" }
+{ "name": "usage-band", "version": "0.3.0", "description": "Shows the 5-hour window, the weekly window and the context window above the prompt, always.", "types": "./types/index.d.ts" }

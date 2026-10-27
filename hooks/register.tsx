@@ -99,7 +99,9 @@ export const register: Register = on => {
           {windowPart('1wk', current.week)}
           <Text dimColor> · </Text>
           <Text color="suggestion" weight="bold">Context </Text>
-          <Text>{contextValue}</Text>
+          {ctx && ctx.percent !== undefined
+            ? <Text color={stoplight(ctx.percent)} weight="bold">{contextValue}</Text>
+            : <Text dimColor>{contextValue}</Text>}
         </Text>
       </Box>
     )

@@ -6,7 +6,7 @@ window you have used, when each one resets, and how full the context window is:
 
     5h 23% (resets in 2h 10m) · 1wk 41% (resets in 3d 4h) · Context 62% (124k/200k)
 
-The 5h and 1wk percentages are stoplight-coloured: green while under half is
+The 5h, 1wk and context percentages are stoplight-coloured: green while under half is
 used, yellow from 50%, red from 80%.
 
 It updates after every turn and whenever a usage window moves by a whole point.
