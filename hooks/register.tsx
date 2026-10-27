@@ -30,6 +30,13 @@ function untilReset(resetsAt: string | undefined, now: number): string {
   return ` (resets in ${left})`
 }
 
+// Stoplight on how much of a window is used: plenty left, middle, running out.
+function stoplight(percentUsed: number): 'success' | 'warning' | 'error' {
+  if (percentUsed >= 80) return 'error'
+  if (percentUsed >= 50) return 'warning'
+  return 'success'
+}
+
 function kilo(tokens: number): string {
   return tokens >= 1000 ? `${Math.round(tokens / 1000)}k` : `${tokens}`
 }
@@ -39,8 +46,8 @@ function line(current: Usage, now: number): string {
     ? `5h ${Math.round(current.fiveHour.percent)}%${untilReset(current.fiveHour.resetsAt, now)}`
     : '5h —'
   const week = current.week
-    ? `Week ${Math.round(current.week.percent)}%${untilReset(current.week.resetsAt, now)}`
-    : 'Week —'
+    ? `1wk ${Math.round(current.week.percent)}%${untilReset(current.week.resetsAt, now)}`
+    : '1wk —'
   const ctx = current.context
   const context = ctx && ctx.percent !== undefined
     ? `Context ${ctx.percent}% (${kilo(ctx.tokens ?? 0)}/${kilo(ctx.window)})`
@@ -71,9 +78,29 @@ export const register: Register = on => {
     const current = await read($, usage)
     const now = await $.clock.now()
     const { Box, Text } = $.ui.resolve(e)
+    const ctx = current.context
+    const contextValue = ctx && ctx.percent !== undefined
+      ? `${ctx.percent}% (${kilo(ctx.tokens ?? 0)}/${kilo(ctx.window)})`
+      : ctx ? `— (${kilo(ctx.window)} window)` : '—'
+    const windowPart = (label: string, w: Usage['fiveHour']) => (
+      <Text>
+        <Text color="suggestion" weight="bold">{label} </Text>
+        {w
+          ? <Text color={stoplight(w.percent)} weight="bold">{Math.round(w.percent)}%</Text>
+          : <Text dimColor>—</Text>}
+        <Text dimColor>{w ? untilReset(w.resetsAt, now) : ''}</Text>
+      </Text>
+    )
     return (
       <Box>
-        <Text dimColor>{line(current, now)}</Text>
+        <Text>
+          {windowPart('5h', current.fiveHour)}
+          <Text dimColor> · </Text>
+          {windowPart('1wk', current.week)}
+          <Text dimColor> · </Text>
+          <Text color="suggestion" weight="bold">Context </Text>
+          <Text>{contextValue}</Text>
+        </Text>
       </Box>
     )
   })
