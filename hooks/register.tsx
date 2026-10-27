@@ -88,7 +88,8 @@ export const register: Register = on => {
         {w
           ? <Text color={stoplight(w.percent)} weight="bold">{Math.round(w.percent)}%</Text>
           : <Text dimColor>—</Text>}
-        <Text dimColor>{w ? untilReset(w.resetsAt, now) : ''}</Text>
+        {/* The reset time: one fixed colour, apart from the labels and the stoplight. */}
+        <Text color="merged">{w ? untilReset(w.resetsAt, now) : ''}</Text>
       </Text>
     )
     return (
