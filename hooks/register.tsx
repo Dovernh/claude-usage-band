@@ -19,15 +19,14 @@ function toUsage(context: SessionContextUsage, limits: SessionRateLimit[]): Usag
   }
 }
 
-// "in 2h 10m", "in 3d 4h"
+// Local clock time: "resets 2:35 PM" today, "resets Thu 2:35 PM" on a later day.
 function untilReset(resetsAt: string | undefined, now: number): string {
   if (!resetsAt) return ''
-  const minutes = Math.max(0, Math.round((Date.parse(resetsAt) - now) / 60000))
-  const days = Math.floor(minutes / 1440)
-  const hours = Math.floor((minutes % 1440) / 60)
-  const mins = minutes % 60
-  const left = days > 0 ? `${days}d ${hours}h` : hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
-  return ` (resets in ${left})`
+  const at = new Date(Date.parse(resetsAt))
+  const time = at.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+  const sameDay = at.toDateString() === new Date(now).toDateString()
+  const day = sameDay ? '' : `${at.toLocaleDateString([], { weekday: 'short' })} `
+  return ` (resets ${day}${time})`
 }
 
 // Stoplight on how much of a window is used: plenty left, middle, running out.
