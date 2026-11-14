@@ -10,6 +10,10 @@ The 5h, 1wk and context percentages are stoplight-coloured: green while under ha
 used, yellow from 50%, red from 80%.
 
 It updates after every turn and whenever a usage window moves by a whole point.
+In a session the desktop app hosts, a phone or iPad watching over Remote
+Control draws neither the band nor the status line, so there the same line is
+also written into the chat at the end of every turn (shown, not sent to the
+model). A session started in a terminal does not get that line.
 The 5-hour and weekly figures come from a Claude subscription; on API billing
 they show as "—".
 
