@@ -72,19 +72,6 @@ export const register: Register = on => {
     return next(e)
   })
 
-  // A session the desktop app hosts (no terminal on its roster) reaches a phone or
-  // iPad watching over Remote Control with neither the band nor the status line;
-  // a transcript row it does show. So there, the line closes every turn too. Not
-  // sent to the model. A terminal session keeps the band and status line alone.
-  on('turn.complete', async ($, e, next) => {
-    const result = await next(e)
-    const surfaces = await $.session.surfaces()
-    if (surfaces.length > 0 && !surfaces.includes('terminal')) {
-      $.ui.log(line(await read($, usage), await $.clock.now()))
-    }
-    return result
-  })
-
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
     if (e.props.hasSurvey) return next(e)
     const current = await read($, usage)
